@@ -26,50 +26,59 @@ function addDestinationInfo(
 }
 
 function formSubmission(document, list, pilot, copilot, fuelLevel, cargoLevel) {
-  // Validate input
-  if (validateInput(fuelLevel) === "Not a Number" || validateInput(cargoLevel) === "Not a Number") {
-    document.getElementById("fuelStatus").textContent = "Fuel Level and Cargo Mass must be numeric values.";
-    document.getElementById("fuelStatus").style.color = "red";
-    document.getElementById("cargoStatus").textContent = ""; // Clear cargo status
-    document.getElementById("launchStatus").textContent = ""; // Clear launch status
-    document.getElementById("pilotStatus").textContent = ""; // Clear pilot status
-    document.getElementById("copilotStatus").textContent = ""; // Clear copilot status
-    list.style.visibility = "hidden"; // Hide the list of faulty items
+  if (pilot === "" || copilot === "" || fuelLevel === "" || cargoLevel === "") {
+    window.alert("All fields are required.");
     return;
   }
 
-  // Check fuel level
+  if (
+    validateInput(fuelLevel) === "Not a Number" ||
+    validateInput(cargoLevel) === "Not a Number"
+  ) {
+    window.alert("Fuel Level and Cargo Mass must be numeric values.");
+    return;
+  }
+
+  fuelLevel = Number(fuelLevel);
+  cargoLevel = Number(cargoLevel);
+
   if (fuelLevel < 10000) {
-    document.getElementById("fuelStatus").textContent = "Fuel level too low for launch";
+    document.getElementById("fuelStatus").textContent =
+      "Fuel level too low for launch";
     document.getElementById("fuelStatus").style.color = "red";
   } else {
-    document.getElementById("fuelStatus").textContent = "Fuel level high enough for launch";
+    document.getElementById("fuelStatus").textContent =
+      "Fuel level high enough for launch";
     document.getElementById("fuelStatus").style.color = "green";
   }
 
-  // Check cargo level
   if (cargoLevel > 10000) {
-    document.getElementById("cargoStatus").textContent = "Cargo mass too heavy for launch";
+    document.getElementById("cargoStatus").textContent =
+      "Cargo mass too heavy for launch";
     document.getElementById("cargoStatus").style.color = "red";
   } else {
-    document.getElementById("cargoStatus").textContent = "Cargo mass low enough for launch";
+    document.getElementById("cargoStatus").textContent =
+      "Cargo mass low enough for launch";
     document.getElementById("cargoStatus").style.color = "green";
   }
 
-  // Check overall launch status
   if (fuelLevel < 10000 || cargoLevel > 10000) {
-    document.getElementById("launchStatus").textContent = "Shuttle Not Ready for Launch";
+    document.getElementById("launchStatus").textContent =
+      "Shuttle Not Ready for Launch";
     document.getElementById("launchStatus").style.color = "red";
   } else {
-    document.getElementById("launchStatus").textContent = "Shuttle is Ready for Launch";
+    document.getElementById("launchStatus").textContent =
+      "Shuttle is Ready for Launch";
     document.getElementById("launchStatus").style.color = "green";
   }
 
-  // Update pilot and co-pilot status only if the input is valid
-  document.getElementById("pilotStatus").textContent = `Pilot ${pilot} is ready for launch`;
-  document.getElementById("copilotStatus").textContent = `Co-pilot ${copilot} is ready for launch`;
+  document.getElementById(
+    "pilotStatus"
+  ).textContent = `Pilot ${pilot} is ready for launch`;
+  document.getElementById(
+    "copilotStatus"
+  ).textContent = `Co-pilot ${copilot} is ready for launch`;
 
-  // Show the faulty items list
   list.style.visibility = "visible";
 }
 
@@ -86,9 +95,10 @@ function validateInput(value) {
 async function myFetch() {
   let planetsReturned;
 
-  planetsReturned = await fetch("https://handlers.education.launchcode.org/static/planets.json")
-    .then(response => response.json());
-  
+  planetsReturned = await fetch(
+    "https://handlers.education.launchcode.org/static/planets.json"
+  ).then((response) => response.json());
+
   return planetsReturned;
 }
 
